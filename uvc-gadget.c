@@ -2243,9 +2243,9 @@ int main(int argc, char *argv[])
     case USB_SPEED_FULL:
         /* Full Speed. */
         if (bulk_mode)
-            udev->maxpkt = 64;
+            udev->maxpkt = 512;
         else
-            udev->maxpkt = 1023;
+            udev->maxpkt = 512;
         break;
 
     case USB_SPEED_HIGH:
@@ -2253,16 +2253,16 @@ int main(int argc, char *argv[])
         if (bulk_mode)
             udev->maxpkt = 512;
         else
-            udev->maxpkt = 1024;
+            udev->maxpkt = 512;
         break;
 
     case USB_SPEED_SUPER:
     default:
         /* Super Speed. */
         if (bulk_mode)
-            udev->maxpkt = 1024;
+            udev->maxpkt = 512;
         else
-            udev->maxpkt = 1024;
+            udev->maxpkt = 512;
         break;
     }
 
