@@ -115,7 +115,7 @@ struct uvc_format_info {
     const struct uvc_frame_info *frames;
 };
 
-static const struct uvc_frame_info uvc_frames_yuyv[] = {
+static const struct uvc_frame_info uvc_frames_UYVY[] = {
     {
         640,
         480,
@@ -156,7 +156,7 @@ static const struct uvc_frame_info uvc_frames_mjpeg[] = {
 };
 
 static const struct uvc_format_info uvc_formats[] = {
-    {V4L2_PIX_FMT_YUYV, uvc_frames_yuyv},
+    {V4L2_PIX_FMT_UYVY, uvc_frames_UYVY},
     {V4L2_PIX_FMT_MJPEG, uvc_frames_mjpeg},
 };
 
@@ -887,7 +887,7 @@ static void uvc_video_fill_buffer(struct uvc_device *dev, struct v4l2_buffer *bu
     unsigned int i;
 
     switch (dev->fcc) {
-    case V4L2_PIX_FMT_YUYV:
+    case V4L2_PIX_FMT_UYVY:
         /* Fill the buffer with video data. */
         bpl = dev->width * 2;
         for (i = 0; i < dev->height; ++i)
@@ -1220,7 +1220,7 @@ static int uvc_video_reqbufs_userptr(struct uvc_device *dev, int nbufs)
         }
 
         switch (dev->fcc) {
-        case V4L2_PIX_FMT_YUYV:
+        case V4L2_PIX_FMT_UYVY:
             bpl = dev->width * 2;
             payload_size = dev->width * dev->height * 2;
             break;
@@ -1238,7 +1238,7 @@ static int uvc_video_reqbufs_userptr(struct uvc_device *dev, int nbufs)
                 goto err;
             }
 
-            if (V4L2_PIX_FMT_YUYV == dev->fcc)
+            if (V4L2_PIX_FMT_UYVY == dev->fcc)
                 for (j = 0; j < dev->height; ++j)
                     memset(dev->dummy_buf[i].start + j * bpl, dev->color++, bpl);
 
@@ -1370,7 +1370,7 @@ uvc_fill_streaming_control(struct uvc_device *dev, struct uvc_streaming_control 
     ctrl->bFrameIndex = iframe + 1;
     ctrl->dwFrameInterval = frame->intervals[0];
     switch (format->fcc) {
-    case V4L2_PIX_FMT_YUYV:
+    case V4L2_PIX_FMT_UYVY:
         ctrl->dwMaxVideoFrameSize = frame->width * frame->height * 2;
         break;
     case V4L2_PIX_FMT_MJPEG:
@@ -1858,7 +1858,7 @@ static int uvc_events_process_data(struct uvc_device *dev, struct uvc_request_da
     target->bFormatIndex = iformat;
     target->bFrameIndex = iframe;
     switch (format->fcc) {
-    case V4L2_PIX_FMT_YUYV:
+    case V4L2_PIX_FMT_UYVY:
         target->dwMaxVideoFrameSize = frame->width * frame->height * 2;
         break;
     case V4L2_PIX_FMT_MJPEG:
@@ -1956,7 +1956,7 @@ static void uvc_events_init(struct uvc_device *dev)
     unsigned int payload_size;
 
     switch (dev->fcc) {
-    case V4L2_PIX_FMT_YUYV:
+    case V4L2_PIX_FMT_UYVY:
         payload_size = dev->width * dev->height * 2;
         break;
     case V4L2_PIX_FMT_MJPEG:
@@ -2021,7 +2021,7 @@ static void usage(const char *argv0)
     fprintf(stderr, " -d		Do not use any real V4L2 capture device\n");
     fprintf(stderr,
             " -f <format>    Select frame format\n\t"
-            "0 = V4L2_PIX_FMT_YUYV\n\t"
+            "0 = V4L2_PIX_FMT_UYVY\n\t"
             "1 = V4L2_PIX_FMT_MJPEG\n");
     fprintf(stderr, " -h		Print this help screen and exit\n");
     fprintf(stderr, " -i image	MJPEG image\n");
@@ -2060,7 +2060,7 @@ int main(int argc, char *argv[])
     int bulk_mode = 0;
     int dummy_data_gen_mode = 0;
     /* Frame format/resolution related params. */
-    int default_format = 0;     /* V4L2_PIX_FMT_YUYV */
+    int default_format = 0;     /* V4L2_PIX_FMT_UYVY */
     int default_resolution = 0; /* VGA 480p */
     int nbufs = 2;              /* Ping-Pong buffers */
     /* USB speed related params */
@@ -2180,7 +2180,7 @@ int main(int argc, char *argv[])
         fmt.fmt.pix.height = (default_resolution == 0) ? 480 : 720;
         fmt.fmt.pix.sizeimage = (default_format == 0) ? (fmt.fmt.pix.width * fmt.fmt.pix.height * 2)
                                                       : (fmt.fmt.pix.width * fmt.fmt.pix.height * 1.5);
-        fmt.fmt.pix.pixelformat = (default_format == 0) ? V4L2_PIX_FMT_YUYV : V4L2_PIX_FMT_MJPEG;
+        fmt.fmt.pix.pixelformat = (default_format == 0) ? V4L2_PIX_FMT_UYVY : V4L2_PIX_FMT_MJPEG;
         fmt.fmt.pix.field = V4L2_FIELD_ANY;
 
         /* Open the V4L2 device. */
