@@ -118,7 +118,7 @@ struct uvc_format_info {
 static const struct uvc_frame_info uvc_frames_yuyv[] = {
     {
         640,
-        360,
+        480,
         {666666, 10000000, 50000000, 0},
     },
     {
@@ -138,7 +138,7 @@ static const struct uvc_frame_info uvc_frames_yuyv[] = {
 static const struct uvc_frame_info uvc_frames_mjpeg[] = {
     {
         640,
-        360,
+        480,
         {666666, 10000000, 50000000, 0},
     },
     {
@@ -2033,7 +2033,7 @@ static void usage(const char *argv0)
             "1 = USER_PTR\n");
     fprintf(stderr,
             " -r <resolution> Select frame resolution:\n\t"
-            "0 = 360p, VGA (640x360)\n\t"
+            "0 = 480p, VGA (640x480)\n\t"
             "1 = 720p, WXGA (1280x720)\n");
     fprintf(stderr,
             " -s <speed>	Select USB bus speed (b/w 0 and 2)\n\t"
@@ -2051,8 +2051,8 @@ int main(int argc, char *argv[])
     struct v4l2_device *vdev;
     struct timeval tv;
     struct v4l2_format fmt;
-    char *uvc_devname = "/dev/video0";
-    char *v4l2_devname = "/dev/video1";
+    char *uvc_devname = "/dev/video2";
+    char *v4l2_devname = "/dev/video0";
     char *mjpeg_image = NULL;
 
     fd_set fdsv, fdsu;
@@ -2061,7 +2061,7 @@ int main(int argc, char *argv[])
     int dummy_data_gen_mode = 0;
     /* Frame format/resolution related params. */
     int default_format = 0;     /* V4L2_PIX_FMT_YUYV */
-    int default_resolution = 0; /* VGA 360p */
+    int default_resolution = 0; /* VGA 480p */
     int nbufs = 2;              /* Ping-Pong buffers */
     /* USB speed related params */
     int mult = 0;
@@ -2177,7 +2177,7 @@ int main(int argc, char *argv[])
         CLEAR(fmt);
         fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         fmt.fmt.pix.width = (default_resolution == 0) ? 640 : 1280;
-        fmt.fmt.pix.height = (default_resolution == 0) ? 360 : 720;
+        fmt.fmt.pix.height = (default_resolution == 0) ? 480 : 720;
         fmt.fmt.pix.sizeimage = (default_format == 0) ? (fmt.fmt.pix.width * fmt.fmt.pix.height * 2)
                                                       : (fmt.fmt.pix.width * fmt.fmt.pix.height * 1.5);
         fmt.fmt.pix.pixelformat = (default_format == 0) ? V4L2_PIX_FMT_YUYV : V4L2_PIX_FMT_MJPEG;
@@ -2205,9 +2205,9 @@ int main(int argc, char *argv[])
 
     /* Set parameters as passed by user. */
     udev->width = (default_resolution == 0) ? 640 : 1280;
-    udev->height = (default_resolution == 0) ? 360 : 720;
-    udev->imgsize = (default_format == 0) ? (udev->width * udev->height * 2) : (udev->width * udev->height * 1.5);
-    udev->fcc = (default_format == 0) ? V4L2_PIX_FMT_YUYV : V4L2_PIX_FMT_MJPEG;
+    udev->height = (default_resolution == 0) ? 480 : 720;
+    udev->imgsize = (default_format == 0) ? (udev->width * udev->height * 3 / 2) : (udev->width * udev->height * 1.5);
+    udev->fcc = (default_format == 0) ? V4L2_PIX_FMT_NV12 : V4L2_PIX_FMT_MJPEG;
     udev->io = uvc_io_method;
     udev->bulk = bulk_mode;
     udev->nbufs = nbufs;

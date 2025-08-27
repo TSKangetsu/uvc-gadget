@@ -6,8 +6,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 project(v4l2-gadget)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -s -Wstack-usage=1000")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -s -Wstack-usage=1000")
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -s -Wstack-usage=1000")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os -s -Wstack-usage=1000")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
