@@ -20,6 +20,6 @@ add_compile_definitions(DEBUG)
 
 find_package(Threads REQUIRED)
 
-add_executable(uvc-gadget uvc-gadget.c)
+add_executable(uvc-gadget main.cpp uvc_gadget.cpp)
 target_link_libraries(uvc-gadget Threads::Threads)
 target_link_libraries(uvc-gadget gcc_pic) 
